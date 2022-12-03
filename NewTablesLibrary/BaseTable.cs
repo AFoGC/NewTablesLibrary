@@ -4,15 +4,18 @@ namespace NewTablesLibrary
 {
     public abstract class BaseTable
     {
-        private int _id = 0;
-        private String _name = String.Empty;
+        [SaveField("id")] private int _id = 0;
+        [SaveField("name")] private String _name = String.Empty;
 
         private TablesCollection _tablesCollection;
 
         public int ID
         {
             get => _id;
-            internal set => _id = value;
+            internal set 
+            {
+                _id = value;
+            }
         }
 
         public String Name

@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewTablesLibrary
 {
     public class Cell : INotifyPropertyChanged
     {
-        private int id;
+        [SaveField("id")] private int _id;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int ID 
         {
-            get => id;
-            set
+            get => _id;
+            internal set
             {
-                id = value;
+                _id = value;
             }
         }
 

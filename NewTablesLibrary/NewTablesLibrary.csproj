@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="BaseTable.cs" />
     <Compile Include="Cell.cs" />
+    <Compile Include="CellAttribute.cs" />
+    <Compile Include="SaveFieldAttribute.cs" />
     <Compile Include="ITable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table.cs" />
