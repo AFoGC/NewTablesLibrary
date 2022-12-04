@@ -50,6 +50,7 @@
     <Compile Include="SaveFieldAttribute.cs" />
     <Compile Include="ITable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StaticHelper.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="TablesCollection.cs" />
   </ItemGroup>
