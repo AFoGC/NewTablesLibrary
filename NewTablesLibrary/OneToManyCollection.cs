@@ -31,22 +31,21 @@ namespace NewTablesLibrary
         public bool Add(T item)
         {
             InnerAdd(item);
-            ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
-            manyToOne.InnerSetValue(_parent);
+            SetConnection(item);
             return true;
         }
 
         public bool Remove(T item)
         {
+            bool removed = false;
+
             if (InnerRemove(item))
             {
                 RemoveConnection(item);
-                return true;
+                removed = true;
             }
-            else
-            {
-                return false;
-            }
+
+            return removed;
         }
 
         public void Clear()
@@ -60,6 +59,12 @@ namespace NewTablesLibrary
         public void Move(int oldindex, int newIndex)
         {
             _cells.Move(oldindex, newIndex);
+        }
+
+        private void SetConnection(T item)
+        {
+            ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
+            manyToOne.InnerSetValue(_parent);
         }
 
         private void RemoveConnection(T item)
