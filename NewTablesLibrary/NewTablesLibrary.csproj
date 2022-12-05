@@ -45,6 +45,7 @@
     <Compile Include="Cell.cs" />
     <Compile Include="CellAttribute.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="EventHandlers.cs" />
     <Compile Include="ManyToOne.cs" />
     <Compile Include="OneToManyCollection.cs" />
     <Compile Include="SaveFieldAttribute.cs" />

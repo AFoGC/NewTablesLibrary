@@ -3,33 +3,44 @@ using System.Linq;
 using System.Reflection;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Collections;
 
 namespace NewTablesLibrary
 {
-    public class OneToManyCollection<T, ParentT> where T : Cell where ParentT : Cell
+    public class OneToManyCollection<T, ParentT> : INotifyCollectionChanged, IEnumerable<T>
+                                                   where T : Cell where ParentT : Cell
     {
         private readonly ParentT _parent;
-        //private readonly List<T> _cells;
         private readonly ObservableCollection<T> _cells;
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public OneToManyCollection(ParentT parent)
         {
             _parent = parent;
+            _cells = new ObservableCollection<T>();
+            _cells.CollectionChanged += CellsChanged;
         }
 
-        public void Add(T item)
+        private void CellsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            CollectionChanged?.Invoke(this, e);
+        }
+
+        public bool Add(T item)
         {
             InnerAdd(item);
             ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
             manyToOne.InnerSetValue(_parent);
+            return true;
         }
 
         public bool Remove(T item)
         {
             if (InnerRemove(item))
             {
-                ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
-                manyToOne.InnerSetValue(null);
+                RemoveConnection(item);
                 return true;
             }
             else
@@ -40,7 +51,10 @@ namespace NewTablesLibrary
 
         public void Clear()
         {
+            foreach (T item in _cells)
+                RemoveConnection(item);
 
+            _cells.Clear();
         }
 
         public void Move(int oldindex, int newIndex)
@@ -48,12 +62,18 @@ namespace NewTablesLibrary
             _cells.Move(oldindex, newIndex);
         }
 
+        private void RemoveConnection(T item)
+        {
+            ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
+            manyToOne.InnerSetValue(null);
+        }
+
         internal void InnerAdd(T item)
         {
             _cells.Add(item);
         }
 
-        public bool InnerRemove(T item)
+        internal bool InnerRemove(T item)
         {
             return _cells.Remove(item);
         }
@@ -69,6 +89,16 @@ namespace NewTablesLibrary
 
             FieldInfo interField = interFields.First();
             return interField.GetValue(item) as ManyToOne<ParentT, T>;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _cells.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _cells.GetEnumerator();
         }
     }
 }
