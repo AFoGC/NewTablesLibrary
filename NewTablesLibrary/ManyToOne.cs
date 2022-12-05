@@ -16,6 +16,7 @@ namespace NewTablesLibrary
         }
 
         public T Value => _value;
+        public int ValueID => _value.ID;
 
         internal void InnerSetValue(T value)
         {
