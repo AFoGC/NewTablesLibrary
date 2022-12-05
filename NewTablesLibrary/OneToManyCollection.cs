@@ -14,8 +14,6 @@ namespace NewTablesLibrary
         private readonly ParentT _parent;
         private readonly ObservableCollection<T> _cells;
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
         public OneToManyCollection(ParentT parent)
         {
             _parent = parent;
@@ -23,6 +21,9 @@ namespace NewTablesLibrary
             _cells.CollectionChanged += CellsChanged;
         }
 
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public int Count => _cells.Count;
         public T this[int index] => _cells[index];
         public int IndexOf(T item) => _cells.IndexOf(item);
         public bool Contains(T item) => _cells.Contains(item);

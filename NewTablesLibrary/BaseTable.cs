@@ -5,7 +5,7 @@ namespace NewTablesLibrary
     public abstract class BaseTable
     {
         [SaveField("id")] private int _id = 0;
-        [SaveField("name")] private String _name = String.Empty;
+        [SaveField("name")] private string _name = string.Empty;
 
         private TablesCollection _tablesCollection;
 
@@ -15,7 +15,7 @@ namespace NewTablesLibrary
             internal set => _id = value;
         }
 
-        public String Name
+        public string Name
         {
             get => _name;
             set => _name = value;
