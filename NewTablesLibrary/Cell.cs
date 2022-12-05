@@ -7,29 +7,19 @@ namespace NewTablesLibrary
     {
         [SaveField("id")] private int _id;
 
+        public BaseTable ParentTable { get; internal set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public int ID 
         {
             get => _id;
-            internal set
-            {
-                _id = value;
-            }
+            internal set => _id = value;
         }
-
-        
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
-
-            /*
-            if (this.ParentTable != null)
-            {
-                ((BaseTable)ParentTable).InCollectionChanged();
-            }
-            */
         }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = "")

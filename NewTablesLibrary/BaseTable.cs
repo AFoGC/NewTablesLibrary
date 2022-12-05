@@ -12,10 +12,7 @@ namespace NewTablesLibrary
         public int ID
         {
             get => _id;
-            internal set 
-            {
-                _id = value;
-            }
+            internal set => _id = value;
         }
 
         public String Name

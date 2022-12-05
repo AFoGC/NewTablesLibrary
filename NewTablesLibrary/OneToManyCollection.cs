@@ -23,6 +23,10 @@ namespace NewTablesLibrary
             _cells.CollectionChanged += CellsChanged;
         }
 
+        public T this[int index] => _cells[index];
+        public int IndexOf(T item) => _cells.IndexOf(item);
+        public bool Contains(T item) => _cells.Contains(item);
+
         private void CellsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(this, e);
