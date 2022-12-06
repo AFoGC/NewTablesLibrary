@@ -7,8 +7,6 @@ namespace NewTablesLibrary
         [SaveField("id")] private int _id = 0;
         [SaveField("name")] private string _name = string.Empty;
 
-        private TablesCollection _tablesCollection;
-
         public int ID
         {
             get => _id;
@@ -21,11 +19,7 @@ namespace NewTablesLibrary
             set => _name = value;
         }
 
-        public TablesCollection TablesCollection
-        {
-            get => _tablesCollection;
-            internal set => _tablesCollection = value;
-        }
+        public TablesCollection ParentCollection { get; internal set; }
 
         public abstract Type DataType { get; }
     }

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace NewTablesLibrary
 {
-    public class Cell : INotifyPropertyChanged
+    public abstract class Cell : INotifyPropertyChanged
     {
         [SaveField("id")] private int _id;
 

@@ -20,8 +20,6 @@ namespace NewTablesLibrary
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public TablesCollection ParentCollection { get; internal set; }
-
         public override Type DataType => typeof(T);
         public int LastID => counter;
         public int Count => _cells.Count;
