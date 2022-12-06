@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace NewTablesLibrary
 {
+    //TODO swap ParentT and T => <ParentT, T>
     public class ManyToOne<T, ParentT> where T : Cell where ParentT : Cell
     {
         private readonly ParentT _parent;

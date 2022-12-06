@@ -64,6 +64,7 @@ namespace NewTablesLibrary
         {
             bool isRemoved = _cells.Remove(item);
 
+            //TODO Add counter logic (example in old version)
             if (isRemoved)
                 RemoveItemConnection(item);
 
