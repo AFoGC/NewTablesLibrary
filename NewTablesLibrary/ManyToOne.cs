@@ -9,19 +9,21 @@ namespace NewTablesLibrary
     public class ManyToOne<T, ParentT> where T : Cell where ParentT : Cell
     {
         private readonly ParentT _parent;
+        private int _valueID;
         private T _value;
-
+        
         public ManyToOne(ParentT parent)
         {
             _parent = parent;
         }
 
         public T Value => _value;
-        public int ValueID => _value.ID;
+        public int ValueID => _valueID;
 
         internal void InnerSetValue(T value)
         {
             _value = value;
+            _valueID = value.ID;
         }
 
         private OneToManyCollection<ParentT, T> GetOneToManyField(T value)

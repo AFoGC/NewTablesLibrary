@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 
 namespace NewTablesLibrary
@@ -55,6 +56,62 @@ namespace NewTablesLibrary
                 _tables.Where(x => x.DataType == dataType);
 
             return tables.First() as Table<T>;
+        }
+
+        public void LoadFromFile(string filePath)
+        {
+            IEnumerable<string> lines = File.ReadLines(filePath);
+            LoadFromStrings(lines);
+        }
+
+        public void LoadFromStrings(IEnumerable<string> lines)
+        {
+            Command command = new Command();
+            IEnumerator<string> enumerator = lines.GetEnumerator();
+
+            if(HasDocStart(lines, command) == false)
+               throw new IOException();
+
+            while (StaticHelper.NextCommand(enumerator, command))
+            {
+                if (command.IsCommand == false)
+                    continue;
+
+                if (command.FieldName == "Table")
+                {
+                    LoadTable(enumerator, command);
+                    continue;
+                }
+
+
+            }
+
+            
+        }
+
+        private void LoadTable(IEnumerator<string> enumerator, Command command)
+        {
+            CellAttribute attribute;
+            foreach (BaseTable table in _tables)
+            {
+                attribute = StaticHelper.GetCellAttrbute(table);
+                if (attribute.DataSaveName == command.FieldValue)
+                {
+                    table.LoadTable(enumerator, command);
+                    continue;
+                }
+            }
+        }
+
+        private bool HasDocStart(IEnumerable<string> lines, Command command)
+        {
+            bool hasDocStart = false;
+            command.GetCommand(lines.First());
+
+            if (command.FieldName == "DocStart")
+                hasDocStart = true;
+
+            return hasDocStart;
         }
     }
 }

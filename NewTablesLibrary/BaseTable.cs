@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace NewTablesLibrary
 {
@@ -22,5 +23,9 @@ namespace NewTablesLibrary
         public TablesCollection ParentCollection { get; internal set; }
 
         public abstract Type DataType { get; }
+
+        internal abstract void LoadTable(IEnumerator<string> enumerator, Command command);
+
+        
     }
 }

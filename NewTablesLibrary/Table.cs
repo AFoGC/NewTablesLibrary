@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Reflection;
 
 namespace NewTablesLibrary
 {
@@ -81,6 +82,55 @@ namespace NewTablesLibrary
         {
             item.ID = 0;
             item.ParentTable = null;
+        }
+
+        internal override void LoadTable(IEnumerator<string> enumerator, Command command)
+        {
+            CellAttribute attribute = StaticHelper.GetCellAttrbute(this);
+            while (StaticHelper.NextCommand(enumerator, command))
+            {
+                if (command.IsCommand == false)
+                    continue;
+
+                if (command.IsMark == false)
+                {
+                    LoadTableField(command);
+                    continue;
+                }
+
+                if (command.FieldName == attribute.DataSaveName)
+                {
+                    LoadCell(enumerator, command);
+                    continue;
+                }
+
+                if (command.FieldName == "Table")
+                    break;
+            }
+        }
+
+        private void LoadCell(IEnumerator<string> enumerator, Command command)
+        {
+            T cell = new T();
+            cell.LoadCell(enumerator, command);
+
+            counter = cell.ID;
+            _cells.Add(cell);
+        }
+
+        private void LoadTableField(Command command)
+        {
+            FieldInfo field;
+            SaveFieldAttribute attribute;
+            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = StaticHelper.GetFieldsWithAttribute(this);
+            foreach ((FieldInfo, SaveFieldAttribute) item in fields)
+            {
+                field = item.Item1;
+                attribute = item.Item2;
+
+                if (command.FieldName == attribute.FieldSaveName)
+                    field.SetValue(this, Convert.ChangeType(command.FieldValue, field.FieldType));
+            }
         }
 
         public IEnumerator<T> GetEnumerator()
