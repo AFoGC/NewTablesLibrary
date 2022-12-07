@@ -27,9 +27,9 @@ namespace NewTablesLibrary
             return cellAttribute;
         }
 
-        internal static IEnumerable<(FieldInfo, SaveFieldAttribute)> GetFieldsWithAttribute(object obj)
+        internal static IEnumerable<(FieldInfo, T)> GetFieldsWithAttribute<T>(object obj) where T : Attribute
         {
-            SaveFieldAttribute fieldAttribute;
+            T fieldAttribute;
             Type objType = obj.GetType();
 
             BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
@@ -37,10 +37,15 @@ namespace NewTablesLibrary
 
             foreach (FieldInfo field in fields)
             {
-                fieldAttribute = field.GetCustomAttribute<SaveFieldAttribute>();
+                fieldAttribute = field.GetCustomAttribute<T>();
                 if (fieldAttribute != null)
                     yield return (field, fieldAttribute);
             }
+        }
+
+        internal static FieldInfo GetIDField(object manyToOneInstance)
+        {
+            return GetFieldsWithAttribute<ConnectionIdAttribute>(manyToOneInstance).First().Item1;
         }
     }
 }

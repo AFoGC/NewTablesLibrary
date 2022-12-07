@@ -9,9 +9,11 @@ namespace NewTablesLibrary
     public class ManyToOne<T, ParentT> where T : Cell where ParentT : Cell
     {
         private readonly ParentT _parent;
-        private int _valueID;
         private T _value;
-        
+
+        [ConnectionId]
+        private int _valueID;
+
         public ManyToOne(ParentT parent)
         {
             _parent = parent;
@@ -39,6 +41,7 @@ namespace NewTablesLibrary
             return interField.GetValue(value) as OneToManyCollection<ParentT, T>;
         }
 
+        //internal static FieldInfo GetID
 
         /*
         public void SetValue(T value)

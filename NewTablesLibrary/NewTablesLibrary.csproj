@@ -41,17 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTable.cs" />
-    <Compile Include="CellAttribute.cs" />
+    <Compile Include="Cell\ConnectionIdAttribute.cs" />
+    <Compile Include="Table\BaseTable.cs" />
+    <Compile Include="Cell\CellAttribute.cs" />
     <Compile Include="Cell\Cell.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="ManyToOne.cs" />
-    <Compile Include="OneToManyCollection.cs" />
-    <Compile Include="SaveFieldAttribute.cs" />
-    <Compile Include="ITable.cs" />
+    <Compile Include="Cell\ManyToOne.cs" />
+    <Compile Include="Cell\OneToManyCollection.cs" />
+    <Compile Include="Cell\SaveFieldAttribute.cs" />
+    <Compile Include="Table\ITable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticHelper.cs" />
-    <Compile Include="Table.cs" />
+    <Compile Include="Table\Table.cs" />
     <Compile Include="TablesCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

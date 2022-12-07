@@ -122,7 +122,9 @@ namespace NewTablesLibrary
         {
             FieldInfo field;
             SaveFieldAttribute attribute;
-            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = StaticHelper.GetFieldsWithAttribute(this);
+            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = 
+                StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
+
             foreach ((FieldInfo, SaveFieldAttribute) item in fields)
             {
                 field = item.Item1;

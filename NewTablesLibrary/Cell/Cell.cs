@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -42,23 +43,29 @@ namespace NewTablesLibrary
             FieldInfo field;
             SaveFieldAttribute attribute;
             Type manyToOneType = typeof(ManyToOne<,>);
-            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = StaticHelper.GetFieldsWithAttribute(this);
+            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = 
+                StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
+
             foreach ((FieldInfo, SaveFieldAttribute) item in fields)
             {
                 field = item.Item1;
                 attribute = item.Item2;
 
                 if (field.FieldType.IsGenericType)
+                {
                     if (field.FieldType.GetGenericTypeDefinition() == manyToOneType)
                     {
-
+                        FieldInfo idField = GetIdField(field.GetValue(this));
+                        idField.SetValue(this, command.FieldValue);
                     }
+                }
+                    
             }
         }
 
-        private void LoadManyToOneID(object manyToOne)
+        private FieldInfo GetIdField(object manyToOneInstance)
         {
-
+            return StaticHelper.GetFieldsWithAttribute<ConnectionIdAttribute>(manyToOneInstance).First().Item1;
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)

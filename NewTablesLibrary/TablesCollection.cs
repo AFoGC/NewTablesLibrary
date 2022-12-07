@@ -83,7 +83,8 @@ namespace NewTablesLibrary
                     continue;
                 }
 
-
+                if (command.IsMark && command.FieldName == "DocEnd")
+                    break;
             }
 
             
