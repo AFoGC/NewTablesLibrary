@@ -42,7 +42,7 @@ namespace NewTablesLibrary
         {
             FieldInfo field;
             SaveFieldAttribute attribute;
-            Type manyToOneType = typeof(ManyToOne<,>);
+            
             IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = 
                 StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
 
@@ -51,15 +51,25 @@ namespace NewTablesLibrary
                 field = item.Item1;
                 attribute = item.Item2;
 
-                if (field.FieldType.IsGenericType)
+                if (attribute.FieldSaveName == command.FieldName)
+                    SetFieldValue(field, command.FieldValue);
+            }
+        }
+
+        private void SetFieldValue(FieldInfo field, string value)
+        {
+            Type manyToOneType = typeof(ManyToOne<,>);
+            if (field.FieldType.IsGenericType)
+            {
+                if (field.FieldType.GetGenericTypeDefinition() == manyToOneType)
                 {
-                    if (field.FieldType.GetGenericTypeDefinition() == manyToOneType)
-                    {
-                        FieldInfo idField = GetIdField(field.GetValue(this));
-                        idField.SetValue(this, command.FieldValue);
-                    }
+                    FieldInfo idField = GetIdField(field.GetValue(this));
+                    idField.SetValue(this, Convert.ChangeType(value, idField.FieldType));
                 }
-                    
+            }
+            else
+            {
+                field.SetValue(this, Convert.ChangeType(value, field.FieldType));
             }
         }
 
@@ -73,7 +83,7 @@ namespace NewTablesLibrary
             PropertyChanged?.Invoke(this, e);
         }
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }

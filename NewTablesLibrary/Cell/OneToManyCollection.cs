@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace NewTablesLibrary
 {
-    public class OneToManyCollection<T, ParentT> : INotifyCollectionChanged, IEnumerable<T>
+    public class OneToManyCollection<ParentT, T> : INotifyCollectionChanged, IEnumerable<T>
                                                    where T : Cell where ParentT : Cell
     {
         private readonly ParentT _parent;
@@ -68,13 +68,13 @@ namespace NewTablesLibrary
 
         private void SetConnection(T item)
         {
-            ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
+            ManyToOne<T, ParentT> manyToOne = GetManyToOneField(item);
             manyToOne.InnerSetValue(_parent);
         }
 
         private void RemoveConnection(T item)
         {
-            ManyToOne<ParentT, T> manyToOne = GetManyToOneField(item);
+            ManyToOne<T, ParentT> manyToOne = GetManyToOneField(item);
             manyToOne.InnerSetValue(null);
         }
 
@@ -88,17 +88,17 @@ namespace NewTablesLibrary
             return _cells.Remove(item);
         }
 
-        private ManyToOne<ParentT, T> GetManyToOneField(T item)
+        private ManyToOne<T, ParentT> GetManyToOneField(T item)
         {
             Type type = item.GetType();
             FieldInfo[] fields = type.GetFields(
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
             IEnumerable<FieldInfo> interFields = fields.Where(x =>
-                x.GetValue(item).GetType() == typeof(ManyToOne<ParentT, T>));
+                x.GetValue(item).GetType() == typeof(ManyToOne<T, ParentT>));
 
             FieldInfo interField = interFields.First();
-            return interField.GetValue(item) as ManyToOne<ParentT, T>;
+            return interField.GetValue(item) as ManyToOne<T, ParentT>;
         }
 
         public IEnumerator<T> GetEnumerator()

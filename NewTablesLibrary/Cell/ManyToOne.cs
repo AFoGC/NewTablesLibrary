@@ -6,7 +6,7 @@ using System.Reflection;
 namespace NewTablesLibrary
 {
     //TODO swap ParentT and T => <ParentT, T>
-    public class ManyToOne<T, ParentT> where T : Cell where ParentT : Cell
+    public class ManyToOne<ParentT, T> where T : Cell where ParentT : Cell
     {
         private readonly ParentT _parent;
         private T _value;
@@ -25,7 +25,10 @@ namespace NewTablesLibrary
         internal void InnerSetValue(T value)
         {
             _value = value;
-            _valueID = value.ID;
+            if (_value != null)
+                _valueID = value.ID;
+            else
+                _valueID = 0;
         }
 
         private OneToManyCollection<ParentT, T> GetOneToManyField(T value)

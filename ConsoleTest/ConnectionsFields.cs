@@ -24,27 +24,30 @@ namespace ConsoleTest
                 Console.WriteLine(book.Genre.Value.Name);
                 Console.WriteLine();
             }
+
+            genre.Books.Remove(book1);
+            genre.Books.Remove(book2);
         }
 
         public class Book : Cell
         {
             public string Name { get; set; }
-            public ManyToOne<Genre, Book> Genre { get; private set; }
+            public ManyToOne<Book, Genre> Genre { get; private set; }
 
             public Book()
             {
-                Genre = new ManyToOne<Genre, Book>(this);
+                Genre = new ManyToOne<Book, Genre>(this);
             }
         }
 
         public class Genre : Cell
         {
             public string Name { get; set; }
-            public OneToManyCollection<Book, Genre> Books { get; private set; }
+            public OneToManyCollection<Genre, Book> Books { get; private set; }
 
             public Genre()
             {
-                Books = new OneToManyCollection<Book, Genre>(this);
+                Books = new OneToManyCollection<Genre, Book>(this);
             }
         }
     }

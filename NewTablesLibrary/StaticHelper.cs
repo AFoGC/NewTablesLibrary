@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NewTablesLibrary
 {
@@ -33,7 +31,7 @@ namespace NewTablesLibrary
             Type objType = obj.GetType();
 
             BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-            FieldInfo[] fields = objType.GetFields(flags);
+            IEnumerable<FieldInfo> fields = objType.GetAllFields(flags);
 
             foreach (FieldInfo field in fields)
             {
@@ -41,11 +39,6 @@ namespace NewTablesLibrary
                 if (fieldAttribute != null)
                     yield return (field, fieldAttribute);
             }
-        }
-
-        internal static FieldInfo GetIDField(object manyToOneInstance)
-        {
-            return GetFieldsWithAttribute<ConnectionIdAttribute>(manyToOneInstance).First().Item1;
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Reflection.Emit;
-using static ConsoleTest.ConnectionsFields;
 
 namespace ConsoleTest;
 
@@ -10,26 +9,39 @@ public class Program
 {
     public static void Main()
     {
-        ManyToOne<Genre, Book> OneToMany = new ManyToOne<Genre, Book>(null);
-        Type type = typeof(ManyToOne<,>);
-        Type genericType = typeof(int);
-        Console.WriteLine(type.Name);
-        Console.WriteLine(genericType.Name);
-        if (type.IsGenericType)
-            Console.WriteLine(type.GetGenericTypeDefinition());
+        ConnectionsFields.TestConnections();
     }
 
-    private static IEnumerable<string> GetList()
+    private static IEnumerable<FieldInfo> AllTypeFields(Type type)
     {
-        yield return"A";
-        yield return"B";
-        yield return"C";
-        yield break;
-        Console.WriteLine("aa");
-        yield return"D";
+        Type current = type;
+        BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+        while (current != null)
+        {
+            foreach (FieldInfo field in current.GetFields(flags))
+            {
+                yield return field;
+            }
+            current = current.BaseType;
+        }
     }
 
-    
+    class O
+    {
+        private int pointer;
+        public int Pointer => pointer;
+    }
+
+    class A : O
+    {
+        private int id;
+        public int ID => id;
+    }
+
+    class B : A
+    {
+        private string Name = String.Empty;
+    }
 }
 
 
