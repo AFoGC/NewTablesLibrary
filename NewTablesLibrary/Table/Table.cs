@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Text;
 
 namespace NewTablesLibrary
 {
@@ -87,7 +88,7 @@ namespace NewTablesLibrary
         internal override void LoadTable(IEnumerator<string> enumerator, Command command)
         {
             CellAttribute attribute = StaticHelper.GetCellAttrbute(this);
-            while (StaticHelper.NextCommand(enumerator, command))
+            while (command.GetNextCommand(enumerator))
             {
                 if (command.IsCommand == false)
                     continue;
@@ -122,8 +123,7 @@ namespace NewTablesLibrary
         {
             FieldInfo field;
             SaveFieldAttribute attribute;
-            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = 
-                StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
+            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = GetSaveFields();
 
             foreach ((FieldInfo, SaveFieldAttribute) item in fields)
             {
@@ -133,6 +133,34 @@ namespace NewTablesLibrary
                 if (command.FieldName == attribute.FieldSaveName)
                     field.SetValue(this, Convert.ChangeType(command.FieldValue, field.FieldType));
             }
+        }
+
+        internal override void SaveTable(StringBuilder builder)
+        {
+            builder.AddCommand("Table", DataType.Name, 0);
+            SaveTableFields(builder);
+
+            foreach (T item in _cells)
+                item.SaveCell(builder);
+
+            builder.AddCommand("Table", 0);
+        }
+
+        private void SaveTableFields(StringBuilder builder)
+        {
+            FieldInfo field;
+            SaveFieldAttribute attribute;
+            foreach ((FieldInfo, SaveFieldAttribute) item in GetSaveFields())
+            {
+                field = item.Item1;
+                attribute = item.Item2;
+                builder.AddCommand(attribute.FieldSaveName, field.GetValue(this).ToString(), 1);
+            }
+        }
+
+        private IEnumerable<(FieldInfo, SaveFieldAttribute)> GetSaveFields()
+        {
+            return StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
         }
 
         public IEnumerator<T> GetEnumerator()

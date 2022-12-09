@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace NewTablesLibrary
 {
@@ -25,7 +26,7 @@ namespace NewTablesLibrary
         internal void LoadCell(IEnumerator<string> enumerator, Command command)
         {
             Type thisType = this.GetType();
-            while (StaticHelper.NextCommand(enumerator, command))
+            while (command.GetNextCommand(enumerator))
             {
                 if (command.IsCommand && command.IsMark == false)
                 {
@@ -43,8 +44,7 @@ namespace NewTablesLibrary
             FieldInfo field;
             SaveFieldAttribute attribute;
             
-            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = 
-                StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
+            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = GetSaveFields();
 
             foreach ((FieldInfo, SaveFieldAttribute) item in fields)
             {
@@ -73,9 +73,43 @@ namespace NewTablesLibrary
             }
         }
 
+        internal void SaveCell(StringBuilder builder)
+        {
+            FieldInfo field;
+            SaveFieldAttribute attribute;
+            IEnumerable<(FieldInfo, SaveFieldAttribute)> fields = GetSaveFields();
+
+            foreach ((FieldInfo, SaveFieldAttribute) value in fields)
+            {
+                field = value.Item1;
+                attribute = value.Item2;
+
+                SaveField(builder, field, attribute);
+            }
+        }
+
+        private void SaveField(StringBuilder builder, FieldInfo field, SaveFieldAttribute attribute)
+        {
+            if (field.FieldType.HasGenericTypeDefenition(typeof(ManyToOne<,>)))
+            {
+                FieldInfo idField = GetIdField(field.GetValue(this));
+                object idValue = idField.GetValue(field.GetValue(this));
+                builder.AddCommand(attribute.FieldSaveName, idValue.ToString(), 2);
+            }
+            else
+            {
+                builder.AddCommand(attribute.FieldSaveName, field.GetValue(this).ToString(), 2);
+            }
+        }
+
         private FieldInfo GetIdField(object manyToOneInstance)
         {
             return StaticHelper.GetFieldsWithAttribute<ConnectionIdAttribute>(manyToOneInstance).First().Item1;
+        }
+
+        private IEnumerable<(FieldInfo, SaveFieldAttribute)> GetSaveFields()
+        {
+            return StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)

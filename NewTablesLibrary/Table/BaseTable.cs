@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace NewTablesLibrary
 {
@@ -25,6 +26,7 @@ namespace NewTablesLibrary
         public abstract Type DataType { get; }
 
         internal abstract void LoadTable(IEnumerator<string> enumerator, Command command);
+        internal abstract void SaveTable(StringBuilder builder);
 
         
     }

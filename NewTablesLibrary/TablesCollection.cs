@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace NewTablesLibrary
 {
@@ -72,7 +73,7 @@ namespace NewTablesLibrary
             if(HasDocStart(lines, command) == false)
                throw new IOException();
 
-            while (StaticHelper.NextCommand(enumerator, command))
+            while (command.GetNextCommand(enumerator))
             {
                 if (command.IsCommand == false)
                     continue;
@@ -86,8 +87,6 @@ namespace NewTablesLibrary
                 if (command.IsMark && command.FieldName == "DocEnd")
                     break;
             }
-
-            
         }
 
         private void LoadTable(IEnumerator<string> enumerator, Command command)
@@ -113,6 +112,19 @@ namespace NewTablesLibrary
                 hasDocStart = true;
 
             return hasDocStart;
+        }
+
+        public void SaveTable(string filePath)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AddCommand("DocStart", 0);
+
+            foreach (BaseTable table in _tables)
+            {
+                table.SaveTable(stringBuilder);
+            }
+
+            stringBuilder.AddCommand("DocEnd", 0);
         }
     }
 }

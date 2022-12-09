@@ -23,6 +23,16 @@ namespace NewTablesLibrary
         public bool IsCommand => _isCommand;
         public bool IsMark => _isMark;
 
+        public bool GetNextCommand(IEnumerator<string> enumerator)
+        {
+            bool isMoved = enumerator.MoveNext();
+
+            if (isMoved)
+                this.GetCommand(enumerator.Current);
+
+            return isMoved;
+        }
+
         public bool GetCommand(string line)
         {
             string fieldName = string.Empty;

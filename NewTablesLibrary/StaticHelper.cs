@@ -2,21 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace NewTablesLibrary
 {
     internal static class StaticHelper
     {
-        internal static bool NextCommand(IEnumerator<string> enumerator, Command command)
-        {
-            bool isMoved = enumerator.MoveNext();
-
-            if (isMoved)
-                command.GetCommand(enumerator.Current);
-
-            return isMoved;
-        }
-
         internal static CellAttribute GetCellAttrbute(BaseTable table)
         {
             Type attributeType = typeof(CellAttribute);
@@ -39,6 +30,42 @@ namespace NewTablesLibrary
                 if (fieldAttribute != null)
                     yield return (field, fieldAttribute);
             }
+        }
+
+        internal static IEnumerable<FieldInfo> GetAllFields(this Type type, BindingFlags flags)
+        {
+            List<Type> types = new List<Type>();
+            Type current = type;
+            while (current != null)
+            {
+                types.Insert(0, current);
+                current = current.BaseType;
+            }
+
+            foreach (Type item in types)
+                foreach (FieldInfo field in item.GetFields(flags))
+                    yield return field;
+        }
+
+        public static void AddCommand(this StringBuilder builder, string fieldName, int countOfTabulations)
+        {
+            builder.Append('\t', countOfTabulations);
+            builder.Append('<');
+            builder.Append(fieldName);
+            builder.Append('>');
+            builder.Append('\n');
+        }
+
+        public static void AddCommand(this StringBuilder builder, string fieldName, string fieldValue, int countOfTabulations)
+        {
+            builder.Append('\t', countOfTabulations);
+            builder.Append('<');
+            builder.Append(fieldName);
+            builder.Append(':');
+            builder.Append(' ');
+            builder.Append(fieldValue);
+            builder.Append('>');
+            builder.Append('\n');
         }
     }
 }
