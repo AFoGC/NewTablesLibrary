@@ -9,7 +9,7 @@ public class Program
 {
     public static void Main()
     {
-        ConnectionsFields.TestConnections();
+        TablesTest.SaveTest();
     }
 
     private static IEnumerable<FieldInfo> AllTypeFields(Type type)

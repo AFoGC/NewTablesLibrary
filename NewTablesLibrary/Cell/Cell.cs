@@ -112,6 +112,11 @@ namespace NewTablesLibrary
             return StaticHelper.GetFieldsWithAttribute<SaveFieldAttribute>(this);
         }
 
+        internal void LoadConnections()
+        {
+
+        }
+
         protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);

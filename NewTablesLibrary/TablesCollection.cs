@@ -59,6 +59,11 @@ namespace NewTablesLibrary
             return tables.First() as Table<T>;
         }
 
+        public BaseTable GetTable(Type dataType)
+        {
+            return _tables.Where(x => x.DataType == dataType).First();
+        }
+
         public void LoadFromFile(string filePath)
         {
             IEnumerable<string> lines = File.ReadLines(filePath);
@@ -101,6 +106,12 @@ namespace NewTablesLibrary
                     continue;
                 }
             }
+            LoadConnections();
+        }
+
+        private void LoadConnections()
+        {
+
         }
 
         private bool HasDocStart(IEnumerable<string> lines, Command command)
@@ -125,6 +136,10 @@ namespace NewTablesLibrary
             }
 
             stringBuilder.AddCommand("DocEnd", 0);
+            using (StreamWriter writer = new StreamWriter(filePath, false ,Encoding.UTF8))
+            {
+                writer.Write(stringBuilder.ToString());
+            }
         }
     }
 }

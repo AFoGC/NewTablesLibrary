@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace NewTablesLibrary
@@ -24,10 +26,24 @@ namespace NewTablesLibrary
         public TablesCollection ParentCollection { get; internal set; }
 
         public abstract Type DataType { get; }
+        protected abstract IEnumerable<Cell> Cells { get; }
 
         internal abstract void LoadTable(IEnumerator<string> enumerator, Command command);
         internal abstract void SaveTable(StringBuilder builder);
-
         
+
+        internal void LoadConnections()
+        {
+            foreach (Cell cell in Cells)
+                cell.LoadConnections();
+        }
+
+        internal bool HasDataTypeIdConnectionField()
+        {
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            return DataType.GetAllFields(flags).Any(x => 
+                x.FieldType.HasGenericTypeDefenition(typeof(ManyToOne<,>)));
+        }
     }
 }

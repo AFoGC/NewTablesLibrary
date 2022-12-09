@@ -29,6 +29,8 @@ namespace NewTablesLibrary
         public int IndexOf(T item) => _cells.IndexOf(item);
         public bool Contains(T item) => _cells.Contains(item);
 
+        protected override IEnumerable<Cell> Cells => _cells;
+
         private void CellsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(this, e);
@@ -141,7 +143,12 @@ namespace NewTablesLibrary
             SaveTableFields(builder);
 
             foreach (T item in _cells)
+            {
+                builder.AddCommand(DataType.Name, 1);
                 item.SaveCell(builder);
+                builder.AddCommand(DataType.Name, 1);
+            }
+                
 
             builder.AddCommand("Table", 0);
         }
