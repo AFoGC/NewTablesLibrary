@@ -34,8 +34,9 @@ namespace NewTablesLibrary
 
         internal void LoadConnections()
         {
-            foreach (Cell cell in Cells)
-                cell.LoadConnections();
+            if(HasDataTypeIdConnectionField())
+                foreach (Cell cell in Cells)
+                    cell.LoadConnections();
         }
 
         internal bool HasDataTypeIdConnectionField()

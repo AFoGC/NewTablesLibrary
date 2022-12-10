@@ -14,6 +14,20 @@ namespace ConsoleTest
             collection.SaveTable("text.tl");
         }
 
+        public static void LoadTest()
+        {
+            collection = new TablesCollection();
+            BooksTable books = new BooksTable();
+            GenresTable genres = new GenresTable();
+            CategoriesTable categories = new CategoriesTable();
+
+            collection.Add(books);
+            collection.Add(genres);
+            collection.Add(categories);
+            collection.LoadFromFile("text.tl");
+            collection.SaveTable("textOut.tl");
+        }
+
         private static void Init()
         {
             collection = new TablesCollection();

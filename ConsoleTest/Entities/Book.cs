@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleTest.Entities
 {
+    [Cell("Book")]
     public class Book : Cell
     {
         [SaveField("name")] private string _name = string.Empty;

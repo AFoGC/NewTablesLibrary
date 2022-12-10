@@ -9,7 +9,7 @@ using System.Collections;
 namespace NewTablesLibrary
 {
     public class OneToManyCollection<ParentT, T> : INotifyCollectionChanged, IEnumerable<T>
-                                                   where T : Cell where ParentT : Cell
+                                                   where T : Cell where ParentT : Cell, new()
     {
         private readonly ParentT _parent;
         private readonly ObservableCollection<T> _cells;

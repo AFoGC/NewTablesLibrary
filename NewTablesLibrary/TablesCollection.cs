@@ -66,7 +66,7 @@ namespace NewTablesLibrary
 
         public void LoadFromFile(string filePath)
         {
-            IEnumerable<string> lines = File.ReadLines(filePath);
+            IEnumerable<string> lines = File.ReadAllLines(filePath);
             LoadFromStrings(lines);
         }
 
@@ -106,12 +106,13 @@ namespace NewTablesLibrary
                     continue;
                 }
             }
-            LoadConnections();
+            //LoadConnections();
         }
 
         private void LoadConnections()
         {
-
+            foreach (BaseTable table in _tables)
+                table.LoadConnections();
         }
 
         private bool HasDocStart(IEnumerable<string> lines, Command command)

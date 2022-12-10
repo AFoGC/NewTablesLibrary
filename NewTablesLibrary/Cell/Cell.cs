@@ -64,7 +64,8 @@ namespace NewTablesLibrary
                 if (field.FieldType.GetGenericTypeDefinition() == manyToOneType)
                 {
                     FieldInfo idField = GetIdField(field.GetValue(this));
-                    idField.SetValue(this, Convert.ChangeType(value, idField.FieldType));
+                    object idValue = field.GetValue(this);
+                    idField.SetValue(idValue, Convert.ChangeType(value, idField.FieldType));
                 }
             }
             else

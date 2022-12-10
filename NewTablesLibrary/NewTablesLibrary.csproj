@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cell\BaseConnectionById.cs" />
     <Compile Include="Cell\ConnectionIdAttribute.cs" />
+    <Compile Include="Cell\IConnectionById.cs" />
     <Compile Include="Cell\TypeExtension.cs" />
     <Compile Include="Table\BaseTable.cs" />
     <Compile Include="Cell\CellAttribute.cs" />

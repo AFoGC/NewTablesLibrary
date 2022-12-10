@@ -5,8 +5,8 @@ using System.Reflection;
 
 namespace NewTablesLibrary
 {
-    //TODO swap ParentT and T => <ParentT, T>
-    public class ManyToOne<ParentT, T> where T : Cell where ParentT : Cell
+    public class ManyToOne<ParentT, T> : BaseConnectionById 
+                                         where T : Cell, new() where ParentT : Cell
     {
         private readonly ParentT _parent;
         private T _value;
@@ -31,17 +31,32 @@ namespace NewTablesLibrary
                 _valueID = 0;
         }
 
-        private OneToManyCollection<ParentT, T> GetOneToManyField(T value)
+        internal override void LoadConnection()
+        {
+            T target = GetTargetElement();
+            OneToManyCollection<T, ParentT> oneToMany = GetOneToManyField(target);
+            oneToMany.Add(_parent);
+
+        }
+
+        private T GetTargetElement()
+        {
+            TablesCollection collection = _parent.ParentTable.ParentCollection;
+            Table<T> table = collection.GetTableByDataType<T>();
+            return table.Where(x => x.ID == this.ValueID).First();
+        }
+
+        private OneToManyCollection<T, ParentT> GetOneToManyField(T value)
         {
             Type type = value.GetType();
             FieldInfo[] fields = type.GetFields(
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
             IEnumerable<FieldInfo> interFields = fields.Where(x =>
-                x.GetValue(value).GetType() == typeof(OneToManyCollection<ParentT, T>));
+                x.GetValue(value).GetType() == typeof(OneToManyCollection<T, ParentT>));
 
             FieldInfo interField = interFields.First();
-            return interField.GetValue(value) as OneToManyCollection<ParentT, T>;
+            return interField.GetValue(value) as OneToManyCollection<T, ParentT>;
         }
 
         //internal static FieldInfo GetID
