@@ -85,20 +85,6 @@ namespace NewTablesLibrary
                 field = value.Item1;
                 attribute = value.Item2;
 
-                SaveField(builder, field, attribute);
-            }
-        }
-
-        private void SaveField(StringBuilder builder, FieldInfo field, SaveFieldAttribute attribute)
-        {
-            if (field.FieldType.HasGenericTypeDefenition(typeof(ManyToOne<,>)))
-            {
-                FieldInfo idField = GetIdField(field.GetValue(this));
-                object idValue = idField.GetValue(field.GetValue(this));
-                builder.AddCommand(attribute.FieldSaveName, idValue.ToString(), 2);
-            }
-            else
-            {
                 builder.AddCommand(attribute.FieldSaveName, field.GetValue(this).ToString(), 2);
             }
         }

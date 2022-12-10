@@ -47,6 +47,22 @@ namespace NewTablesLibrary
             Table<T> table = collection.GetTableByDataType<T>();
             return table.Where(x => x.ID == this.ValueID).FirstOrDefault();
         }
+        
+        public void SetValue(T value)
+        {
+            RemoveFromPrevious();
+            InnerSetValue(value);
+            GetOneToManyField(value).InnerAdd(_parent);
+        }
+
+        private void RemoveFromPrevious()
+        {
+            if (_value != null)
+            {
+                OneToManyCollection<T, ParentT> collection = GetOneToManyField(_value);
+                collection.InnerRemove(_parent);
+            }
+        }
 
         private OneToManyCollection<T, ParentT> GetOneToManyField(T value)
         {
@@ -61,25 +77,9 @@ namespace NewTablesLibrary
             return interField.GetValue(value) as OneToManyCollection<T, ParentT>;
         }
 
-        //internal static FieldInfo GetID
-
-        /*
-        public void SetValue(T value)
+        public override string ToString()
         {
-            RemoveFromPrevious();
-
-
-
+            return ValueID.ToString();
         }
-
-        private void RemoveFromPrevious()
-        {
-            if (_value != null)
-            {
-                OneToManyCollection<ParentT, T> collection = GetOneToManyField(_value);
-                collection.InnerRemove(_parent);
-            }
-        }
-        */
     }
 }

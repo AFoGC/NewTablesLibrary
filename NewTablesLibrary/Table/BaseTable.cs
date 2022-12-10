@@ -44,7 +44,7 @@ namespace NewTablesLibrary
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             return DataType.GetAllFields(flags).Any(x => 
-                x.FieldType.HasGenericTypeDefenition(typeof(ManyToOne<,>)));
+                x.FieldType.BaseType == typeof(BaseConnectionById));
         }
     }
 }

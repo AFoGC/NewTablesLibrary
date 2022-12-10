@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Cell\BaseConnectionById.cs" />
     <Compile Include="Cell\ConnectionIdAttribute.cs" />
+    <Compile Include="Cell\ILoadField.cs" />
     <Compile Include="Cell\TypeExtension.cs" />
     <Compile Include="Table\BaseTable.cs" />
     <Compile Include="Cell\CellAttribute.cs" />
