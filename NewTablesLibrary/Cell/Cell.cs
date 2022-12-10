@@ -115,7 +115,18 @@ namespace NewTablesLibrary
 
         internal void LoadConnections()
         {
+            foreach (var connectionField in GetAllIdConnections())
+                connectionField.LoadConnection();
+        }
 
+        private IEnumerable<BaseConnectionById> GetAllIdConnections()
+        {
+            Type type = this.GetType();
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+
+            foreach (FieldInfo field in type.GetFields(flags))
+                if (field.FieldType.BaseType == typeof(BaseConnectionById))
+                    yield return field.GetValue(this) as BaseConnectionById;
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)

@@ -48,17 +48,17 @@ namespace NewTablesLibrary
 
             if (Contains(item) == false)
             {
-                _cells.Add(item);
-                AddItemConnection(item);
+                item.ID = ++counter;
+                AddItem(item);
                 isAdded = true;
             }
 
             return isAdded;
         }
 
-        private void AddItemConnection(T item)
+        private void AddItem(T item)
         {
-            item.ID = ++counter;
+            _cells.Add(item);
             item.ParentTable = this;
         }
 
@@ -118,7 +118,7 @@ namespace NewTablesLibrary
             cell.LoadCell(enumerator, command);
 
             counter = cell.ID;
-            _cells.Add(cell);
+            AddItem(cell);
         }
 
         private void LoadTableField(Command command)

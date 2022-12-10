@@ -92,6 +92,8 @@ namespace NewTablesLibrary
                 if (command.IsMark && command.FieldName == "DocEnd")
                     break;
             }
+
+            LoadConnections();
         }
 
         private void LoadTable(IEnumerator<string> enumerator, Command command)
@@ -106,7 +108,6 @@ namespace NewTablesLibrary
                     continue;
                 }
             }
-            //LoadConnections();
         }
 
         private void LoadConnections()

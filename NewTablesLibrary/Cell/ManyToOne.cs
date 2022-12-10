@@ -34,16 +34,18 @@ namespace NewTablesLibrary
         internal override void LoadConnection()
         {
             T target = GetTargetElement();
-            OneToManyCollection<T, ParentT> oneToMany = GetOneToManyField(target);
-            oneToMany.Add(_parent);
-
+            if (target != null)
+            {
+                OneToManyCollection<T, ParentT> oneToMany = GetOneToManyField(target);
+                oneToMany.Add(_parent);
+            }
         }
 
         private T GetTargetElement()
         {
             TablesCollection collection = _parent.ParentTable.ParentCollection;
             Table<T> table = collection.GetTableByDataType<T>();
-            return table.Where(x => x.ID == this.ValueID).First();
+            return table.Where(x => x.ID == this.ValueID).FirstOrDefault();
         }
 
         private OneToManyCollection<T, ParentT> GetOneToManyField(T value)

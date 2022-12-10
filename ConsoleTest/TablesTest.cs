@@ -10,25 +10,11 @@ namespace ConsoleTest
 
         public static void SaveTest()
         {
-            Init();
+            SaveInit();
             collection.SaveTable("text.tl");
         }
 
-        public static void LoadTest()
-        {
-            collection = new TablesCollection();
-            BooksTable books = new BooksTable();
-            GenresTable genres = new GenresTable();
-            CategoriesTable categories = new CategoriesTable();
-
-            collection.Add(books);
-            collection.Add(genres);
-            collection.Add(categories);
-            collection.LoadFromFile("text.tl");
-            collection.SaveTable("textOut.tl");
-        }
-
-        private static void Init()
+        private static void SaveInit()
         {
             collection = new TablesCollection();
             BooksTable books = new BooksTable();
@@ -39,14 +25,14 @@ namespace ConsoleTest
             collection.Add(genres);
             collection.Add(categories);
 
-            Book book1 = new Book() { Author = "Ja", Name = "Genii 1"};
-            Book book2 = new Book() { Author = "Ty", Name = "Atlant Raspravil plechi"};
-            Book book3 = new Book() { Name = "TestBook", Date = DateTime.Today};
+            Book book1 = new Book() { Author = "Ja", Name = "Genii 1" };
+            Book book2 = new Book() { Author = "Ty", Name = "Atlant Raspravil plechi" };
+            Book book3 = new Book() { Name = "TestBook", Date = DateTime.Today };
 
-            Genre genre1 = new Genre() { Name = "Vopros", IsClassic = true};
+            Genre genre1 = new Genre() { Name = "Vopros", IsClassic = true };
             Genre genre2 = new Genre() { Name = "Test" };
 
-            Category category1 = new Category() { Name = "TestCat", Description = "AHAHAH"};
+            Category category1 = new Category() { Name = "TestCat", Description = "AHAHAH" };
 
             books.Add(book1);
             books.Add(book2);
@@ -60,6 +46,35 @@ namespace ConsoleTest
             genre2.Books.Add(book3);
 
             category1.Books.Add(book3);
+        }
+
+        public static void LoadTest()
+        {
+            LoadInit();
+            collection.LoadFromFile("text.tl");
+            collection.SaveTable("textOut.tl");
+
+            foreach (Book book in collection.GetTableByDataType<Book>())
+            {
+                Console.Write(book.Name);
+                Console.Write(": ");
+                Console.Write(book.Genre?.Name);
+                Console.Write(": ");
+                Console.Write(book.Category?.Name);
+                Console.WriteLine(";");
+            }
+        }
+
+        private static void LoadInit()
+        {
+            collection = new TablesCollection();
+            BooksTable books = new BooksTable();
+            GenresTable genres = new GenresTable();
+            CategoriesTable categories = new CategoriesTable();
+
+            collection.Add(books);
+            collection.Add(genres);
+            collection.Add(categories);
         }
     }
 }
