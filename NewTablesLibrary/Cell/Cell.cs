@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -58,15 +57,11 @@ namespace NewTablesLibrary
 
         private void SetFieldValue(FieldInfo field, string value)
         {
-            Type manyToOneType = typeof(ManyToOne<,>);
-            if (field.FieldType.IsGenericType)
+            if (field.FieldType.HasGenericTypeDefenition(typeof(ManyToOne<,>)))
             {
-                if (field.FieldType.GetGenericTypeDefinition() == manyToOneType)
-                {
-                    FieldInfo idField = GetIdField(field.GetValue(this));
-                    object idValue = field.GetValue(this);
-                    idField.SetValue(idValue, Convert.ChangeType(value, idField.FieldType));
-                }
+                FieldInfo idField = GetIdField(field.GetValue(this));
+                object idValue = field.GetValue(this);
+                idField.SetValue(idValue, Convert.ChangeType(value, idField.FieldType));
             }
             else
             {
