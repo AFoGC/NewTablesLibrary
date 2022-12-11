@@ -8,15 +8,17 @@ namespace NewTablesLibrary
     public class ManyToOne<ParentT, T> : BaseConnectionById 
                                          where T : Cell, new() where ParentT : Cell
     {
+        private readonly FieldInfo _oneToManyField;
         private readonly ParentT _parent;
-        private T _value;
 
         [ConnectionId]
         private int _valueID;
+        private T _value;
 
         public ManyToOne(ParentT parent)
         {
             _parent = parent;
+            _oneToManyField = GetOneToManyFieldInfo();
         }
 
         public T Value => _value;
@@ -36,7 +38,7 @@ namespace NewTablesLibrary
             T target = GetTargetElement();
             if (target != null)
             {
-                OneToManyCollection<T, ParentT> oneToMany = GetOneToManyField(target);
+                OneToManyCollection<T, ParentT> oneToMany = GetOneToManyInstance(target);
                 oneToMany.Add(_parent);
             }
         }
@@ -52,29 +54,33 @@ namespace NewTablesLibrary
         {
             RemoveFromPrevious();
             InnerSetValue(value);
-            GetOneToManyField(value).InnerAdd(_parent);
+            GetOneToManyInstance(value).InnerAdd(_parent);
         }
 
         private void RemoveFromPrevious()
         {
             if (_value != null)
             {
-                OneToManyCollection<T, ParentT> collection = GetOneToManyField(_value);
+                OneToManyCollection<T, ParentT> collection = GetOneToManyInstance(_value);
                 collection.InnerRemove(_parent);
             }
         }
 
-        private OneToManyCollection<T, ParentT> GetOneToManyField(T value)
+        private OneToManyCollection<T, ParentT> GetOneToManyInstance(T value)
         {
-            Type type = value.GetType();
+            return _oneToManyField.GetValue(value) as OneToManyCollection<T, ParentT>;
+        }
+
+        private FieldInfo GetOneToManyFieldInfo()
+        {
+            Type type = typeof(T);
             FieldInfo[] fields = type.GetFields(
                 BindingFlags.Instance | BindingFlags.NonPublic);
 
             IEnumerable<FieldInfo> interFields = fields.Where(x =>
-                x.GetValue(value).GetType() == typeof(OneToManyCollection<T, ParentT>));
+                x.FieldType == typeof(OneToManyCollection<T, ParentT>));
 
-            FieldInfo interField = interFields.First();
-            return interField.GetValue(value) as OneToManyCollection<T, ParentT>;
+            return interFields.First();
         }
 
         public override string ToString()
