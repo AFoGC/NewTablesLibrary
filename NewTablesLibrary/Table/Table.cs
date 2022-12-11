@@ -28,6 +28,7 @@ namespace NewTablesLibrary
         public T this[int index] => _cells[index];
         public int IndexOf(T item) => _cells.IndexOf(item);
         public bool Contains(T item) => _cells.Contains(item);
+        public T GetLast() => this[this.Count - 1];
 
         protected override IEnumerable<Cell> Cells => _cells;
 
@@ -66,9 +67,14 @@ namespace NewTablesLibrary
         {
             bool isRemoved = _cells.Remove(item);
 
-            //TODO Add counter logic (example in old version)
             if (isRemoved)
+            {
+                if (counter == item.ID)
+                    counter = GetLast().ID;
+
                 RemoveItemConnection(item);
+            }
+                
 
             return isRemoved;
         }
