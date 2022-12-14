@@ -44,6 +44,7 @@
     <Compile Include="Cell\BaseConnectionById.cs" />
     <Compile Include="Cell\ConnectionIdAttribute.cs" />
     <Compile Include="Cell\ILoadField.cs" />
+    <Compile Include="Cell\OneToOne.cs" />
     <Compile Include="Cell\TypeExtension.cs" />
     <Compile Include="eventHandlers.cs" />
     <Compile Include="Table\BaseTable.cs" />
