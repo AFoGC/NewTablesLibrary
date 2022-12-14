@@ -21,6 +21,8 @@ namespace NewTablesLibrary
             _oneToManyField = GetOneToManyFieldInfo();
         }
 
+        public event Action ConnectionChanged;
+
         public T Value => _value;
         public int ValueID => _valueID;
 
@@ -31,6 +33,8 @@ namespace NewTablesLibrary
                 _valueID = value.ID;
             else
                 _valueID = 0;
+
+            ConnectionChanged?.Invoke();
         }
 
         internal override void LoadConnection()
