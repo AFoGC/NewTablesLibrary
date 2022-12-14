@@ -15,6 +15,7 @@ namespace NewTablesLibrary
         public BaseTable ParentTable { get; internal set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event Action Removed;
 
         public int ID 
         {
@@ -110,14 +111,20 @@ namespace NewTablesLibrary
                     yield return field.GetValue(this) as BaseConnectionById;
         }
 
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        internal void OnRemoved()
+        {
+            Removed?.Invoke();
+        }
+
+        private void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e);
         }
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            ParentTable.ParentCollection.OnDataChanged();
         }
     }
 }

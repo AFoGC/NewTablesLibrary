@@ -35,6 +35,7 @@ namespace NewTablesLibrary
         private void CellsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(this, e);
+            OnDataChanged();
         }
 
         public bool Add()
@@ -91,11 +92,16 @@ namespace NewTablesLibrary
         {
             item.ID = 0;
             item.ParentTable = null;
+            item.OnRemoved();
         }
 
         internal override void LoadTable(IEnumerator<string> enumerator, Command command)
         {
+            _cells.CollectionChanged -= CellsChanged;
+
+            Clear();
             CellAttribute attribute = StaticHelper.GetCellAttrbute(this);
+
             while (command.GetNextCommand(enumerator))
             {
                 if (command.IsCommand == false)
@@ -116,6 +122,8 @@ namespace NewTablesLibrary
                 if (command.FieldName == "Table")
                     break;
             }
+
+            _cells.CollectionChanged += CellsChanged;
         }
 
         private void LoadCell(IEnumerator<string> enumerator, Command command)

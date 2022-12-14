@@ -27,6 +27,7 @@ namespace NewTablesLibrary
         internal static IEnumerable<FieldInfo> GetAllFields(this Type type, BindingFlags flags)
         {
             List<Type> types = new List<Type>();
+            List<FieldInfo> fields = new List<FieldInfo>();
             Type current = type;
             while (current != null)
             {
@@ -36,7 +37,10 @@ namespace NewTablesLibrary
 
             foreach (Type item in types)
                 foreach (FieldInfo field in item.GetFields(flags))
-                    yield return field;
+                    if (fields.Contains(field) == false)
+                        fields.Add(field);
+
+            return fields;
         }
     }
 }

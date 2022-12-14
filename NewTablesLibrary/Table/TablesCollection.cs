@@ -20,6 +20,9 @@ namespace NewTablesLibrary
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event Action TablesLoaded;
+        public event Action TablesSaved;
+        public event Action DataChanged;
 
         public int Count => _tables.Count;
         public int IndexOf(BaseTable item) => _tables.IndexOf(item);
@@ -94,6 +97,7 @@ namespace NewTablesLibrary
             }
 
             LoadConnections();
+            TablesLoaded?.Invoke();
         }
 
         private void LoadTable(IEnumerator<string> enumerator, Command command)
@@ -142,6 +146,13 @@ namespace NewTablesLibrary
             {
                 writer.Write(stringBuilder.ToString());
             }
+
+            TablesSaved?.Invoke();
+        }
+
+        internal void OnDataChanged()
+        {
+            DataChanged?.Invoke();
         }
     }
 }
