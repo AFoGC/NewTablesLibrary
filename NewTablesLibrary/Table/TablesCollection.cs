@@ -47,19 +47,17 @@ namespace NewTablesLibrary
         public T GetTableByTableType<T>() where T : BaseTable
         {
             Type tableType = typeof(T);
-            IEnumerable<BaseTable> tables = 
-                _tables.Where(x => x.GetType() == tableType);
-
-            return tables.First() as T;
+            return _tables
+                .Where(x => x.GetType() == tableType)
+                .First() as T;
         }
 
         public Table<T> GetTableByDataType<T>() where T : Cell, new()
         {
             Type dataType = typeof(T);
-            IEnumerable<BaseTable> tables = 
-                _tables.Where(x => x.DataType == dataType);
-
-            return tables.First() as Table<T>;
+            return _tables
+                .Where(x => x.DataType == dataType)
+                .First() as Table<T>;
         }
 
         public BaseTable GetTable(Type dataType)

@@ -81,6 +81,11 @@ namespace NewTablesLibrary
                 .First();
         }
 
+        public override void FromString(string value)
+        {
+            _valueID = Convert.ToInt32(value);
+        }
+
         public override string ToString()
         {
             return ValueID.ToString();

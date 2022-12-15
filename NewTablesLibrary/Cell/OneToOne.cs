@@ -76,5 +76,15 @@ namespace NewTablesLibrary
                 .Where(x => x.FieldType == typeof(OneToOne<T, ParentT>))
                 .First();
         }
+
+        public override void FromString(string value)
+        {
+            _valueID = Convert.ToInt32(value);
+        }
+
+        public override string ToString()
+        {
+            return ValueID.ToString();
+        }
     }
 }

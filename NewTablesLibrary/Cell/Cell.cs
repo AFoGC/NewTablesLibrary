@@ -58,11 +58,10 @@ namespace NewTablesLibrary
 
         private void SetFieldValue(FieldInfo field, string value)
         {
-            if (field.FieldType.HasGenericTypeDefenition(typeof(ManyToOne<,>)))
+            if (field.FieldType.GetInterface(nameof(ILoadField)) != null)
             {
-                FieldInfo idField = GetIdField(field.GetValue(this));
-                object idValue = field.GetValue(this);
-                idField.SetValue(idValue, Convert.ChangeType(value, idField.FieldType));
+                ILoadField loadField = field.GetValue(this) as ILoadField;
+                loadField.FromString(value);
             }
             else
             {
