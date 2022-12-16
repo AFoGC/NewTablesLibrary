@@ -74,5 +74,7 @@ namespace NewTablesLibrary
         {
             ParentCollection.OnDataChanged();
         }
+
+        internal abstract void InvokeOnLoaded();
     }
 }

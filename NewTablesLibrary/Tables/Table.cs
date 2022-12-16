@@ -21,6 +21,7 @@ namespace NewTablesLibrary
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+        public event Action Loaded;
 
         public override Type DataType => typeof(T);
         public int LastID => counter;
@@ -177,6 +178,13 @@ namespace NewTablesLibrary
                 attribute = item.Item2;
                 builder.AddCommand(attribute.FieldSaveName, field.GetValue(this).ToString(), 1);
             }
+        }
+
+        internal override void InvokeOnLoaded() => OnLoaded();
+
+        protected virtual void OnLoaded()
+        {
+            Loaded?.Invoke();
         }
 
         private IEnumerable<(FieldInfo, SaveFieldAttribute)> GetSaveFields()

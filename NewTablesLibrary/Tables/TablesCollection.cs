@@ -91,6 +91,14 @@ namespace NewTablesLibrary
             }
 
             LoadConnections();
+            OnTablesLoaded();
+        }
+
+        protected virtual void OnTablesLoaded()
+        {
+            foreach (BaseTable table in _tables)
+                table.InvokeOnLoaded();
+
             TablesLoaded?.Invoke();
         }
 
