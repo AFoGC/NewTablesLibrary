@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace NewTablesLibrary
@@ -39,9 +35,9 @@ namespace NewTablesLibrary
             if (_tables.Any(x => x.GetType() == tableType))
                 throw new NotSupportedException("This collection already has a table with this type");
 
+            table.ParentCollection = this;
             _tables.Add(table);
             table.ID = ++counter;
-            table.ParentCollection = this;
         }
 
         public T GetTableByTableType<T>() where T : BaseTable

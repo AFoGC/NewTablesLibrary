@@ -30,14 +30,23 @@ namespace NewTablesLibrary
 
         public void SetValue(T value)
         {
-            GetOneToOneInstance(_value).InnerSetValue(null);
+            OneToOne<T, ParentT> targetOneToOne = GetTargetOneToOneInstance(_value);
+            if (targetOneToOne != null)
+            {
+                OneToOne<ParentT, T> parentOneToOne = GetParentOneToOneInstance(targetOneToOne.Value);
+                parentOneToOne?.InnerSetValue(null);
+            }
+            
+            targetOneToOne?.InnerSetValue(null);
+
             InnerSetValue(value);
-            GetOneToOneInstance(_value).InnerSetValue(_parent);
+            GetTargetOneToOneInstance(value)?.InnerSetValue(_parent);
         }
 
         private void InnerSetValue(T value)
         {
             _value = value;
+
             if (_value != null)
                 _valueID = _value.ID;
             else
@@ -51,7 +60,7 @@ namespace NewTablesLibrary
             T target = GetTargetElement();
 
             if (target != null)
-                GetOneToOneInstance(target).InnerSetValue(_parent);
+                GetTargetOneToOneInstance(target).SetValue(_parent);
         }
 
         private T GetTargetElement()
@@ -61,9 +70,20 @@ namespace NewTablesLibrary
             return table.Where(x => x.ID == this.ValueID).FirstOrDefault();
         }
 
-        private OneToOne<T, ParentT> GetOneToOneInstance(T value)
+        private OneToOne<T, ParentT> GetTargetOneToOneInstance(T value)
         {
-            return _oneToManyField.GetValue(value) as OneToOne<T, ParentT>;
+            if (value != null)
+                return _oneToManyField.GetValue(value) as OneToOne<T, ParentT>;
+            else 
+                return null;
+        }
+
+        private OneToOne<ParentT, T> GetParentOneToOneInstance(ParentT value)
+        {
+            if (value != null)
+                return _oneToManyField.GetValue(value) as OneToOne<ParentT, T>;
+            else
+                return null;
         }
 
         private FieldInfo InitOneToOneFieldInfo()
