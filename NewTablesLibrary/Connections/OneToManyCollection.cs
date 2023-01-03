@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace NewTablesLibrary
 {
-    public class OneToManyCollection<ParentT, T> : INotifyCollectionChanged, IEnumerable<T>
+    public class OneToManyCollection<ParentT, T> : INotifyCollectionChanged, ICollection<T>
                                                    where T : Cell where ParentT : Cell, new()
     {
         private readonly ParentT _parent;
@@ -24,6 +24,8 @@ namespace NewTablesLibrary
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public int Count => _cells.Count;
+        public bool IsReadOnly => false;
+
         public T this[int index] => _cells[index];
         public int IndexOf(T item) => _cells.IndexOf(item);
         public bool Contains(T item) => _cells.Contains(item);
@@ -101,6 +103,11 @@ namespace NewTablesLibrary
             return interField.GetValue(item) as ManyToOne<T, ParentT>;
         }
 
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            _cells.CopyTo(array, arrayIndex);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             return _cells.GetEnumerator();
@@ -109,6 +116,11 @@ namespace NewTablesLibrary
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _cells.GetEnumerator();
+        }
+
+        void ICollection<T>.Add(T item)
+        {
+            Add(item);
         }
     }
 }
