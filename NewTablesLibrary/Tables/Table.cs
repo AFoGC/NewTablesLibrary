@@ -35,8 +35,13 @@ namespace NewTablesLibrary
 
         private void CellsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            CollectionChanged?.Invoke(this, e);
+            OnCollectionChanged(e);
             OnDataChanged();
+        }
+
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            CollectionChanged?.Invoke(this, e);
         }
 
         public bool Add()
@@ -91,9 +96,10 @@ namespace NewTablesLibrary
 
         private void RemoveItemConnection(T item)
         {
+            item.InvokeOnRemoving();
             item.ID = 0;
             item.ParentTable = null;
-            item.OnRemoved();
+            item.InvokeOnRemoved();
         }
 
         internal override void LoadTable(IEnumerator<string> enumerator, Command command)

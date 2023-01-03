@@ -16,6 +16,7 @@ namespace NewTablesLibrary
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action Removed;
+        public event Action Removing;
 
         public int ID 
         {
@@ -110,9 +111,17 @@ namespace NewTablesLibrary
                     yield return field.GetValue(this) as BaseConnectionById;
         }
 
-        internal void OnRemoved()
+        internal void InvokeOnRemoved() => OnRemoved();
+        internal void InvokeOnRemoving() => OnRemoving();
+
+        protected virtual void OnRemoved()
         {
             Removed?.Invoke();
+        }
+
+        protected virtual void OnRemoving()
+        {
+            Removing?.Invoke();
         }
 
         private void OnPropertyChanged(PropertyChangedEventArgs e)
